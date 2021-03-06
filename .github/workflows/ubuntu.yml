@@ -1,0 +1,72 @@
+name: Ubuntu
+
+on:
+  push:
+  schedule:
+    # Run every hour
+    - cron:  '0 * * * *'
+
+jobs:
+  ubuntu1804:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-1804-ccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-1804-ccache
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get --yes install xorg-dev libglu1-mesa-dev
+          sudo apt-get --yes install ccache
+          ccache -M 2G
+
+      - name: Build
+        run: |
+          PATH=/usr/lib/ccache:$PATH
+          ccache -s
+          mkdir build
+          cd build
+          cmake ..
+          make -j$(nproc)
+          ./Draw --skip-for-unit-test
+          ccache -s
+
+  ubuntu2004:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-2004-ccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-2004-ccache
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get --yes install xorg-dev libglu1-mesa-dev
+          sudo apt-get --yes install ccache
+          ccache -M 2G
+
+      - name: Build
+        run: |
+          PATH=/usr/lib/ccache:$PATH
+          ccache -s
+          mkdir build
+          cd build
+          cmake ..
+          make -j$(nproc)
+          ./Draw --skip-for-unit-test
+          ccache -s
