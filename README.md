@@ -25,3 +25,27 @@ cmake ..
 make -j$(nproc)
 ./Draw
 ```
+
+## macOS
+
+```bash
+git clone https://github.com/intel-isl/open3d-cmake-external-project.git
+cd open3d-cmake-external-project
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+./Draw
+```
+
+## Windows 10
+
+```batch
+git clone https://github.com/intel-isl/open3d-cmake-external-project.git
+cd open3d-cmake-external-project
+mkdir build
+cd build
+cmake -G "Visual Studio 16 2019 Win64" -A x64 ..
+cmake --build . --config Release
+Release\Draw
+```
