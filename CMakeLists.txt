@@ -1,6 +1,6 @@
 # On Ubuntu 18.04, get the latest CMake from https://apt.kitware.com/.
 cmake_minimum_required(VERSION 3.18)
-set(CMAKE_CXX_STANDARD 14)
+
 project(Open3DCMakeExternalProject LANGUAGES C CXX)
 
 option(GLIBCXX_USE_CXX11_ABI   "Set -D_GLIBCXX_USE_CXX11_ABI=1"       OFF)
@@ -35,13 +35,18 @@ ExternalProject_Add(
         -DBUILD_PYTHON_MODULE=OFF
         -DBUILD_EXAMPLES=OFF
 )
-ExternalProject_Get_Property(external_open3d INSTALL_DIR)
-set(OPEN3D_INCLUDE_DIRS ${INSTALL_DIR}/include ${INSTALL_DIR}/include/open3d/3rdparty)
-set(OPEN3D_LIB_DIR ${INSTALL_DIR}/lib)
 
-add_executable(Draw Draw.cpp)
-add_dependencies(Draw external_open3d)
-target_include_directories(Draw PRIVATE ${OPEN3D_INCLUDE_DIRS})
-target_link_directories(Draw PRIVATE ${OPEN3D_LIB_DIR})
-target_link_libraries(Draw PRIVATE Open3D)
-target_compile_definitions(Draw PRIVATE _GLIBCXX_USE_CXX11_ABI=$<BOOL:${GLIBCXX_USE_CXX11_ABI}>)
+# Simulate importing Open3D::Open3D
+ExternalProject_Get_Property(external_open3d INSTALL_DIR)
+add_library(Open3DHelper INTERFACE)
+add_dependencies(Open3DHelper external_open3d)
+target_compile_features(Open3DHelper INTERFACE cxx_std_14)
+target_compile_definitions(Open3DHelper INTERFACE _GLIBCXX_USE_CXX11_ABI=$<BOOL:${GLIBCXX_USE_CXX11_ABI}>)
+target_include_directories(Open3DHelper INTERFACE "${INSTALL_DIR}/include" "${INSTALL_DIR}/include/open3d/3rdparty")
+target_link_directories(Open3DHelper INTERFACE "${INSTALL_DIR}/lib")
+target_link_libraries(Open3DHelper INTERFACE Open3D)
+add_library(Open3D::Open3D ALIAS Open3DHelper)
+
+add_executable(Draw)
+target_sources(Draw PRIVATE Draw.cpp)
+target_link_libraries(Draw PRIVATE Open3D::Open3D)
