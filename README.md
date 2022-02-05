@@ -37,7 +37,7 @@ cd open3d-cmake-external-project
 mkdir build
 cd build
 cmake ..
-cmake --build . --config Release --parallel 12
+make -j 12
 ./Draw
 ```
 
