@@ -19,7 +19,7 @@ ExternalProject_Add(
     external_open3d
     PREFIX open3d
     GIT_REPOSITORY https://github.com/intel-isl/Open3D.git
-    GIT_TAG master
+    GIT_TAG main
     GIT_SHALLOW ON
     UPDATE_COMMAND ""
     # Check out https://github.com/intel-isl/Open3D/blob/master/CMakeLists.txt
