@@ -1,3 +1,7 @@
+# Moved to the Open3D repo
+
+See the [main Open3D repo](https://github.com/isl-org/Open3D/tree/main/examples/cmake/open3d-cmake-external-project) for an updated example.
+
 # Use Open3D as a CMake External Project
 
 This is one of the two CMake examples showing how to use Open3D in your CMake
